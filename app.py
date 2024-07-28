@@ -9,7 +9,7 @@ import copy
 
 # Default configuration
 default_config = {
-    "main_model": "llama3-70b-8192",
+    "main_model": "llama-3.1-70b-versatile",
     "cycles": 3,
     "layer_agent_config": {}
 }
