@@ -277,63 +277,17 @@ with st.expander("Configuração MOA atual", expanded=False):
     )
 
 
-client = Groq(api_key=os.getenv('GROQ_API_KEY'))
-model = 'whisper-large-v3'
-# Função para gravar áudio e salvar em um arquivo
-def record_audio(filename, duration=5, fs=44100):
-    st.write("Gravando...")
-    audio = sd.rec(int(duration * fs), samplerate=fs, channels=2)
-    sd.wait()  # Esperar até a gravação terminar
-    sf.write(filename, audio, fs)
-    st.write("Gravação terminada.")
-
-# Função para converter áudio em texto usando Groq Whisper
-def audio_to_text(filepath):
-    with open(filepath, "rb") as file:
-        translation = client.audio.translations.create(
-            file=(filepath, file.read()),
-            model=model,
-        )
-    return translation.text
-
-# Interface do Streamlit
-st.title("Chat com Entrada de Áudio usando Groq Whisper")
-if 'messages' not in st.session_state:
-    st.session_state.messages = []
-
-# Mostrar mensagens anteriores
+# Chat interface
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Gravar áudio e obter texto
-if st.button("Clique para gravar áudio"):
-    audio_file = "audio.wav"
-    record_audio(audio_file)
-    try:
-        query = audio_to_text(audio_file)
-        st.session_state.messages.append({"role": "user", "content": query})
-        with st.chat_message("user"):
-            st.write(query)
-
-        # Supondo que moa_agent esteja configurado em st.session_state
-        moa_agent = st.session_state.moa_agent
-        with st.chat_message("assistant"):
-            message_placeholder = st.empty()
-            ast_mess = stream_response(moa_agent.chat(query, output_format='json'))
-            response = st.write_stream(ast_mess)
-        
-        st.session_state.messages.append({"role": "assistant", "content": response})
-    except Exception as e:
-        st.write(f"Erro ao reconhecer o áudio: {e}")
-
-# Entrada de texto manual
 if query := st.chat_input("Faça uma pergunta"):
     st.session_state.messages.append({"role": "user", "content": query})
     with st.chat_message("user"):
         st.write(query)
 
-    moa_agent = st.session_state.moa_agent
+    moa_agent: MOAgent = st.session_state.moa_agent
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         ast_mess = stream_response(moa_agent.chat(query, output_format='json'))
