@@ -5,11 +5,7 @@ from moa.agent import MOAgent
 from moa.agent.moa import ResponseChunk
 from streamlit_ace import st_ace
 import copy
-from pydub import AudioSegment
-import soundfile as sf
-import sounddevice as sd
-from groq import Groq
-import os
+
 
 # Default configuration
 default_config = {
