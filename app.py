@@ -237,7 +237,23 @@ with st.sidebar:
 # Main app layout
 st.header("Mistura de Agentes", anchor=False)
 st.write("Uma demonstração da arquitetura Mistura de Agentes proposta pela Together AI, alimentada pelos Groq LLMs.")
-st.image("./static/moa_groq.svg", caption="Fluxo Mistura de Agentes", width=1000)
+
+
+# Inicializa a variável de estado na sessão
+if 'mostrar_imagem' not in st.session_state:
+    st.session_state.mostrar_imagem = False
+
+# Função para alternar o estado
+def toggle_imagem():
+    st.session_state.mostrar_imagem = not st.session_state.mostrar_imagem
+
+# Botão para alternar a exibição da imagem, com texto dinâmico
+button_text = 'Ocultar' if st.session_state.mostrar_imagem else 'Veja o Fluxograma'
+st.button(button_text, on_click=toggle_imagem)
+
+# Exibe a imagem com base no estado atual
+if st.session_state.mostrar_imagem:
+    st.image("./static/moa_groq.svg", caption="Fluxo Mistura de Agentes", width=1000)
 
 # Display current configuration
 with st.expander("Configuração MOA atual", expanded=False):
