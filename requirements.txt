@@ -8,3 +8,4 @@ sounddevice==0.4.7
 soundfile==0.12.1
 pydub==0.25.1
 PyAudio==0.2.14
+portaudio19-dev
